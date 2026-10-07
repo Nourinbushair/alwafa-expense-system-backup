@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { createClient } from '../../lib/supabase/client'
 import Sidebar from '../../components/Sidebar'
+import { createClient } from '../../lib/supabase/client'
 
 type Expense = {
   amount: number
@@ -58,6 +58,8 @@ export default function DashboardPage() {
   }, [])
 
   async function loadDashboard() {
+    setLoading(true)
+
     const {
       data: { user },
     } = await supabase.auth.getUser()
@@ -82,7 +84,8 @@ export default function DashboardPage() {
       .select('amount, main_category')
 
     if (error) {
-      console.error(error)
+      console.error('Error loading expenses:', error)
+      setExpenses([])
     } else {
       setExpenses(data || [])
     }
@@ -107,16 +110,19 @@ export default function DashboardPage() {
     0
   )
 
+  function formatAmount(amount: number) {
+    return `OMR ${amount.toFixed(3)}`
+  }
+
   return (
-    
     <main className="min-h-screen bg-gray-50 pl-64">
       <Sidebar />
+
       {/* Header */}
       <header className="bg-blue-700 px-6 py-5 text-white shadow">
         <div className="mx-auto flex max-w-7xl items-center justify-between">
-
           <div>
-            <h1 className="text-2xl font-bold">
+            <h1 className="text-2xl font-medium text-white">
               Al-Wafa International
             </h1>
 
@@ -127,11 +133,10 @@ export default function DashboardPage() {
 
           <button
             onClick={handleLogout}
-            className="rounded-lg bg-white/10 px-4 py-2 text-sm font-medium hover:bg-white/20"
+            className="rounded-lg bg-white/10 px-4 py-2 text-sm font-normal text-white hover:bg-white/20"
           >
             Logout
           </button>
-
         </div>
       </header>
 
@@ -139,7 +144,7 @@ export default function DashboardPage() {
 
         {/* Welcome */}
         <div className="mb-6">
-          <h2 className="text-2xl font-bold text-gray-800">
+          <h2 className="text-2xl font-medium text-gray-800">
             Welcome, {userName}
           </h2>
 
@@ -148,16 +153,21 @@ export default function DashboardPage() {
           </p>
         </div>
 
-        {/* Total */}
+        {/* Total Expenses */}
         <div className="mb-6 rounded-xl bg-white p-6 shadow">
           <p className="text-sm text-gray-500">
             Total Expenses
           </p>
 
-          <p className="mt-2 text-4xl font-bold text-blue-700">
+          <p className="mt-2 text-4xl font-medium text-blue-700">
             {loading
-              ? 'Loading...'
-              : `OMR ${totalExpenses.toFixed(3)}`}
+              ? 'OMR 0.000'
+              : formatAmount(totalExpenses)}
+          </p>
+
+          <p className="mt-2 text-sm text-gray-500">
+            {expenses.length} expense
+            {expenses.length !== 1 ? 's' : ''} recorded
           </p>
         </div>
 
@@ -169,19 +179,21 @@ export default function DashboardPage() {
               key={category.key}
               className="rounded-xl bg-white p-5 shadow transition hover:shadow-md"
             >
-
-              <p className="text-sm font-medium text-gray-500">
+              <p className="text-sm font-normal text-gray-500">
                 {category.name}
               </p>
 
-              <p className="mt-3 text-2xl font-bold text-gray-800">
+              <p className="mt-3 text-2xl font-medium text-gray-800">
                 {loading
-                  ? '...'
-                  : `OMR ${getCategoryTotal(
-                      category.key
-                    ).toFixed(3)}`}
+                  ? 'OMR 0.000'
+                  : formatAmount(
+                      getCategoryTotal(category.key)
+                    )}
               </p>
 
+              <p className="mt-2 text-xs text-gray-400">
+                Total recorded
+              </p>
             </div>
           ))}
 
@@ -194,7 +206,7 @@ export default function DashboardPage() {
             onClick={() => router.push('/expenses')}
             className="rounded-xl bg-blue-700 p-6 text-left text-white shadow transition hover:bg-blue-800"
           >
-            <h3 className="text-xl font-bold">
+            <h3 className="text-xl font-medium text-white">
               Add Expense
             </h3>
 
@@ -207,7 +219,7 @@ export default function DashboardPage() {
             onClick={() => router.push('/expenses')}
             className="rounded-xl bg-white p-6 text-left shadow transition hover:shadow-md"
           >
-            <h3 className="text-xl font-bold text-gray-800">
+            <h3 className="text-xl font-medium text-gray-800">
               View Expenses
             </h3>
 
@@ -219,7 +231,6 @@ export default function DashboardPage() {
         </div>
 
       </div>
-      
     </main>
   )
 }
