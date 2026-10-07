@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import Sidebar from '../../components/Sidebar'
 import { createClient } from '../../lib/supabase/client'
+import Sidebar from '../../components/Sidebar'
 
 type Expense = {
   amount: number
@@ -118,7 +118,6 @@ export default function DashboardPage() {
     <main className="min-h-screen bg-gray-50 pl-64">
       <Sidebar />
 
-      {/* Header */}
       <header className="bg-blue-700 px-6 py-5 text-white shadow">
         <div className="mx-auto flex max-w-7xl items-center justify-between">
           <div>
@@ -142,7 +141,6 @@ export default function DashboardPage() {
 
       <div className="mx-auto max-w-7xl p-6">
 
-        {/* Welcome */}
         <div className="mb-6">
           <h2 className="text-2xl font-medium text-gray-800">
             Welcome, {userName}
@@ -153,7 +151,6 @@ export default function DashboardPage() {
           </p>
         </div>
 
-        {/* Total Expenses */}
         <div className="mb-6 rounded-xl bg-white p-6 shadow">
           <p className="text-sm text-gray-500">
             Total Expenses
@@ -171,7 +168,6 @@ export default function DashboardPage() {
           </p>
         </div>
 
-        {/* Category Cards */}
         <div className="mb-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
 
           {categories.map((category) => (
@@ -199,7 +195,6 @@ export default function DashboardPage() {
 
         </div>
 
-        {/* Main Actions */}
         <div className="grid gap-5 md:grid-cols-2">
 
           <button
