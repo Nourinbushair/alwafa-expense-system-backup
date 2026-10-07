@@ -1,4 +1,4 @@
-
+'use client'
 
 import { FormEvent, useEffect, useState } from 'react'
 import { createClient } from '../../lib/supabase/client'
