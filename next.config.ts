@@ -1,18 +1,9 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  /* config options here */
-  cacheComponents: true,
-  partialPrefetching: true,
-  reactCompiler: true,
-  turbopack: {
-    rules: {
-      "*.css": {
-        loaders: ["@tailwindcss/turbopack"],
-        as: "*.css",
-      },
-    },
+const nextConfig = {
+  output: 'export',
+  basePath: '/alwafa-expense-system',
+  images: {
+    unoptimized: true,
   },
-};
+}
 
-export default nextConfig;
+export default nextConfig
